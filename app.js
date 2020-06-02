@@ -16,22 +16,12 @@ app.use(express.urlencoded({ extended: false }));
 // Standard welcome page
 app.get("/", (req, res) => {
   res.send(
-    "Welcome to the mini-hackernews API. To get all data, simply use /all, or to use the extensive api go with /stories."
+    "<p>Welcome to Gökhan's HackerNews wrapper. Use <a href=\"/api\">/api</a> to check what's been going on.</p>"
   );
 });
 
-// Route to provide all stories that has more than 100 score
-app.get("/all", (req, res) => {
-  News.find({})
-    .then((response) => {
-      res.json(response);
-    })
-    .catch((err) => {
-      res.json({
-        msg: err,
-      });
-    });
-});
+// API Route
+app.use("/api", require("./routes/api/stories"));
 
 // Cron job to refresh stories every 6 hours
 cron.schedule("0 */6 * * *", function () {
@@ -48,8 +38,6 @@ cron.schedule("0 */6 * * *", function () {
 cron.schedule("59 23 * * *", function () {
   console.log("A day finished, again...");
 });
-
-app.use("/stories", require("./routes/api/stories"));
 
 const PORT = process.env.PORT || 5000;
 
