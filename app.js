@@ -1,9 +1,13 @@
+require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
 const cron = require("node-cron");
+const fetch = require("node-fetch");
+
+const cors = require("cors");
 
 const News = require("./models/news");
 const Connect = require("./controllers/connect");
+const InstaPaper = require("./controllers/instapaper");
 
 const app = express();
 
@@ -33,10 +37,27 @@ cron.schedule("0 */6 * * *", function () {
   console.log("Database updated!");
 });
 
-// Another scheduled task to send top stories to InstaPaper every day 23:59
-// Waiting for the API credentials!
-cron.schedule("59 23 * * *", function () {
-  console.log("A day finished, again...");
+// Another scheduled task to send top stories to InstaPaper every day 23:55
+cron.schedule("55 23 * * *", async function () {
+  // Get the top stories from API
+  const fetch_response = await fetch(
+    "http://hackernews.gokhanarkan.com/api/top"
+  );
+  // Check if accepted
+  if (fetch_response.status === 200) {
+    const json = await fetch_response.json();
+    // Check the size of the file
+    // I am aiming to send 10 stories per day
+    if (json.length > 10) {
+      for (let i = 0; i < 10; i++) {
+        InstaPaper.sendStory(json[i]);
+      }
+    } else {
+      json.forEach((item) => {
+        InstaPaper.sendStory(item);
+      });
+    }
+  }
 });
 
 const PORT = process.env.PORT || 5000;
