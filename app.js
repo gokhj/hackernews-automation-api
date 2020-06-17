@@ -27,8 +27,8 @@ app.get("/", (req, res) => {
 // API Route
 app.use("/api", require("./routes/api/stories"));
 
-// Cron job to refresh stories every 6 hours
-cron.schedule("0 */6 * * *", function () {
+// Cron job to refresh stories every 3 hours
+cron.schedule("0 */3 * * *", function () {
   console.log("Purging database...");
   // Deleting the database
   Connect.deleteDB();
