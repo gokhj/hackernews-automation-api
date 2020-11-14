@@ -1,0 +1,8 @@
+<h3 style="margin: 2rem 0 2rem 0;">For more information, please visit the <a href="/api/">api</a> page.</h3>
+
+<h1>News</h1>
+<ul class="list-group" style="margin-bottom: 4rem">
+  {{#each stories}}
+  <li class="list-group-item"><a href="{{this.url}}" target="_blank">{{ this.title }}</a> | Score: {{ this.score }}</li>
+  {{/each}}
+</ul>

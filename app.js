@@ -1,7 +1,9 @@
 require("dotenv").config();
 const express = require("express");
+var exphbs = require("express-handlebars");
 const cron = require("node-cron");
 const fetch = require("node-fetch");
+const axios = require("axios");
 
 const cors = require("cors");
 
@@ -11,6 +13,9 @@ const InstaPaper = require("./controllers/instapaper");
 
 const app = express();
 
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
+
 app.use(cors());
 
 // Body Parser Middleware
@@ -18,10 +23,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Standard welcome page
-app.get("/", (req, res) => {
-  res.send(
-    "<p>Welcome to Gökhan's HackerNews wrapper. Use <a href=\"/api\">/api</a> to check what's been going on.</p>"
-  );
+app.get("/", async (req, res) => {
+  // res.send(
+  //   "<p>Welcome to Gökhan's HackerNews wrapper. Use <a href=\"/api\">/api</a> to check what's been going on.</p>"
+  // );
+  const stories = await News.find({}).lean();
+  res.render("home", {
+    stories,
+  });
 });
 
 // API Route
