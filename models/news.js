@@ -1,3 +1,34 @@
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      News:
+ *        type: object
+ *        required:
+ *          - _id
+ *          - title
+ *          - url
+ *          - score
+ *        properties:
+ *          id:
+ *            type: string
+ *            description: Unique id of the story.
+ *          title:
+ *            type: string
+ *            description: Title of the story.
+ *          url:
+ *            type: string
+ *            description: The original url of the story.
+ *          score:
+ *            type: integer
+ *            description: HackerNews user score.
+ *        example:
+ *           _id: 5fafa01ef6947c08d0df70a1
+ *           title: Your Computer Isn't Yours
+ *           url: https://sneak.berlin/20201112/your-computer-isnt-yours/
+ *           score: 1411
+ */
+
 require("dotenv").config();
 const mongoose = require("mongoose");
 // Connecting db
