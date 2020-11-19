@@ -1,8 +1,11 @@
-<h2 class="mb-4">For more information, please visit the <a href="/api/">api</a> page.</h2>
-
-<h4>News</h4>
+{{#if stories.msg}}
+<p class="mb-5">{{key}} not found.</p>
+{{else}}
+<h4 class="mb-4">Search for '{{key}}'</h4>
 <ul class="list-group mb-5">
   {{#each stories}}
   <li class="list-group-item"><a href="{{this.url}}" target="_blank" rel="noopener">{{ this.title }}</a> | Score: {{ this.score }}</li>
   {{/each}}
 </ul>
+
+{{/if}}

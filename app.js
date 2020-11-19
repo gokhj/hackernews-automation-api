@@ -10,6 +10,7 @@ const cors = require("cors");
 const News = require("./models/news");
 const Connect = require("./controllers/connect");
 const InstaPaper = require("./controllers/instapaper");
+const { searchStories } = require("./helpers/data");
 
 const app = express();
 
@@ -24,12 +25,18 @@ app.use(express.urlencoded({ extended: false }));
 
 // Standard welcome page
 app.get("/", async (req, res) => {
-  // res.send(
-  //   "<p>Welcome to Gökhan's HackerNews wrapper. Use <a href=\"/api\">/api</a> to check what's been going on.</p>"
-  // );
   const stories = await News.find({}).lean();
   res.render("home", {
     stories,
+  });
+});
+
+app.get("/search", async (req, res) => {
+  const stories = await searchStories(req.query.q);
+  console.log(stories);
+  res.render("search", {
+    stories,
+    key: req.query.q,
   });
 });
 
@@ -39,9 +46,7 @@ app.use("/api", require("./routes/api/stories"));
 // Cron job to refresh stories every 3 hours
 cron.schedule("0 */3 * * *", function () {
   console.log("Purging database...");
-  // Deleting the database
   Connect.deleteDB();
-  // Add new stories
   Connect.getData();
   console.log("Database updated!");
 });

@@ -14,7 +14,8 @@ exports.getAllStories = async () => {
 // Searching a term
 // will be replaced with elasticsearch later
 exports.searchStories = async (key) => {
-  const news = await News.find({});
+  const term = key.toLowerCase();
+  const news = await News.find({}).lean();
   let found = [];
   // Checking individual stories
   news.some((title) => {
@@ -27,7 +28,7 @@ exports.searchStories = async (key) => {
         .replace(/[^a-zA-Z0-9 ]/g, "")
         .toLowerCase();
       // Checking match
-      if (replaced_element === key) {
+      if (replaced_element === term) {
         found.push(title);
         break;
       }
