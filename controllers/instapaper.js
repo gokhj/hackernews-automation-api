@@ -9,7 +9,6 @@ const InstaPaper = {
     };
     // Some HackerNews stories do not have external links, just checking before POST
     if (story.url === undefined) {
-      console.log(story);
       return false;
     }
 
@@ -25,6 +24,7 @@ const InstaPaper = {
       });
     } catch (err) {
       console.error(err);
+      return false;
     }
   },
 };

@@ -2,8 +2,10 @@ const News = require("../models/news");
 
 // Sort the stories with descending order.
 exports.getTopStories = async () => {
-  const news = await News.find({});
-  return news.sort(this.compare);
+  let news = await News.find({});
+  return news.sort((a, b) => {
+    return b.score - a.score;
+  });
 };
 
 // Returns all the stories
@@ -43,12 +45,4 @@ exports.searchStories = async (key) => {
 
 exports.getHigherScore = async (score) => {
   return await News.find({ score: { $gt: score } });
-};
-
-// Function to sort stories by descending order
-exports.compare = async (a, b) => {
-  let comparison = 0;
-  if (a.score > b.score) comparison = -1;
-  else if (a.score < b.score) comparison = 1;
-  return comparison;
 };
