@@ -31,7 +31,6 @@ app.get("/", async (req, res) => {
 
 app.get("/search", async (req, res) => {
   const stories = await searchStories(req.query.q);
-  console.log(stories);
   res.render("search", {
     stories,
     key: req.query.q,

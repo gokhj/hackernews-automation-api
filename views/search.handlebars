@@ -1,7 +1,9 @@
 {{#if stories.msg}}
-<p class="mb-5">{{key}} not found.</p>
+<div class="alert alert-danger mb-5" role="alert">
+  <p>'{{key}}' not found.</p>
+</div>
 {{else}}
-<h4 class="mb-4">Search for '{{key}}'</h4>
+<h4 class="mb-2">Search for '{{key}}'</h4>
 <ul class="list-group mb-5">
   {{#each stories}}
   <li class="list-group-item"><a href="{{this.url}}" target="_blank" rel="noopener">{{ this.title }}</a> | Score: {{ this.score }}</li>
