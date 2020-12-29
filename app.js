@@ -26,16 +26,20 @@ app.use(express.urlencoded({ extended: false }));
 // Standard welcome page
 app.get("/", async (req, res) => {
   let stories = await News.find({}).lean();
-  stories = stories.map((story, index) => {
-    const domain = story.url
-      ? story.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1]
-      : null;
-    return (story = {
-      ...story,
-      index: index + 1,
-      domain,
+  
+  stories = stories
+    .map((story, index) => {
+      const domain = story.url ? new URL(story.url).hostname : null;
+      return {
+        ...story,
+        index: index + 1,
+        domain,
+      };
+    })
+    .filter((story) => {
+      return story.url ? story : false;
     });
-  });
+
   res.render("home", {
     stories,
   });
