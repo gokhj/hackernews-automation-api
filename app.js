@@ -8,7 +8,7 @@ const cors = require("cors");
 const News = require("./models/news");
 const Connect = require("./controllers/connect");
 const InstaPaper = require("./controllers/instapaper");
-const { searchStories, getTopStories } = require("./helpers/data");
+const { searchStories, getTopStories, prepareStories } = require("./helpers/data");
 
 const app = express();
 
@@ -27,18 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", async (req, res) => {
   let stories = await News.find({}).lean();
   
-  stories = stories
-    .map((story, index) => {
-      const domain = story.url ? new URL(story.url).hostname : null;
-      return {
-        ...story,
-        index: index + 1,
-        domain,
-      };
-    })
-    .filter((story) => {
-      return story.url ? story : false;
-    });
+  stories = prepareStories(stories);
 
   res.render("home", {
     stories,
@@ -46,7 +35,10 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/search", async (req, res) => {
-  const stories = await searchStories(req.query.q);
+  let stories = await searchStories(req.query.q);
+  if (!stories.msg) {
+    stories = prepareStories(stories);
+  }
   res.render("search", {
     stories,
     key: req.query.q,

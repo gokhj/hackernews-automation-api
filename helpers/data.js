@@ -46,3 +46,18 @@ exports.searchStories = async (key) => {
 exports.getHigherScore = async (score) => {
   return await News.find({ score: { $gt: score } });
 };
+
+exports.prepareStories = (stories) => {
+  return stories
+    .map((story, index) => {
+      const domain = story.url ? new URL(story.url).hostname : null;
+      return {
+        ...story,
+        index: index + 1,
+        domain,
+      };
+    })
+    .filter((story) => {
+      return story.url ? story : false;
+    });
+};
