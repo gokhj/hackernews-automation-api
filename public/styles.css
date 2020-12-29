@@ -59,6 +59,10 @@ a:visited { color:#828282; text-decoration:none; }
   text-decoration: none;
 }
 
+.customLink {
+  text-decoration: underline !important;
+}
+
 pre { overflow: auto; padding: 2px; white-space: pre-wrap; word-wrap: break-word; }
 pre:hover { overflow:auto }
 
