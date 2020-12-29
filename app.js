@@ -12,6 +12,8 @@ const { searchStories, getTopStories } = require("./helpers/data");
 
 const app = express();
 
+app.use(express.static(__dirname + "/public"));
+
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
@@ -23,7 +25,17 @@ app.use(express.urlencoded({ extended: false }));
 
 // Standard welcome page
 app.get("/", async (req, res) => {
-  const stories = await News.find({}).lean();
+  let stories = await News.find({}).lean();
+  stories = stories.map((story, index) => {
+    const domain = story.url
+      ? story.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1]
+      : null;
+    return (story = {
+      ...story,
+      index: index + 1,
+      domain,
+    });
+  });
   res.render("home", {
     stories,
   });
