@@ -8,7 +8,11 @@ const cors = require("cors");
 const News = require("./models/news");
 const Connect = require("./controllers/connect");
 const InstaPaper = require("./controllers/instapaper");
-const { searchStories, getTopStories, prepareStories } = require("./helpers/data");
+const {
+  searchStories,
+  getTopStories,
+  prepareStories,
+} = require("./helpers/data");
 
 const app = express();
 
@@ -26,7 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 // Standard welcome page
 app.get("/", async (req, res) => {
   let stories = await News.find({}).lean();
-  
+
   stories = prepareStories(stories);
 
   res.render("home", {

@@ -2,7 +2,7 @@ const News = require("../models/news");
 
 // Sort the stories with descending order.
 exports.getTopStories = async () => {
-  let news = await News.find({});
+  let news = await News.find({}).lean();
   return news.sort((a, b) => {
     return b.score - a.score;
   });
@@ -47,8 +47,10 @@ exports.getHigherScore = async (score) => {
   return await News.find({ score: { $gt: score } });
 };
 
-exports.prepareStories = (stories) => {
+exports.prepareStories = (stories, limit = null) => {
+  const storyLimit = limit ? limit : stories.length;
   return stories
+    .slice(0, storyLimit)
     .map((story, index) => {
       const domain = story.url ? new URL(story.url).hostname : null;
       return {
