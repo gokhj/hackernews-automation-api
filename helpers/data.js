@@ -51,15 +51,13 @@ exports.prepareStories = (stories, limit = null) => {
   const storyLimit = limit ? limit : stories.length;
   return stories
     .slice(0, storyLimit)
+    .filter((story) => story.url)
     .map((story, index) => {
-      const domain = story.url ? new URL(story.url).hostname : null;
+      const { hostname } = new URL(story.url);
       return {
         ...story,
         index: index + 1,
-        domain,
+        domain: hostname,
       };
-    })
-    .filter((story) => {
-      return story.url ? story : false;
     });
 };

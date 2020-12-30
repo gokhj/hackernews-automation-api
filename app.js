@@ -30,11 +30,8 @@ app.use(express.urlencoded({ extended: false }));
 // Standard welcome page
 app.get("/", async (req, res) => {
   let stories = await News.find({}).lean();
-
-  stories = prepareStories(stories);
-
   res.render("home", {
-    stories,
+    stories: prepareStories(stories),
   });
 });
 
